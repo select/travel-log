@@ -25,7 +25,7 @@
       <!-- Image container -->
       <div class="max-w-[90vw] max-h-[90vh] relative">
         <img 
-          :src="`${baseUrl}img/${currentPhoto.file}`" 
+          :src="`${baseUrl}thumbnails/${currentPhoto.file}`" 
           class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
           :alt="currentPhoto.file"
         />
