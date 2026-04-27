@@ -1,6 +1,6 @@
 <template>
   <div class="w-full flex-1 min-h-0 relative">
-    <div ref="mapContainer" class="w-full h-full" />
+    <div ref="mapContainer" class="w-full h-full" style="touch-action: none;" />
     <PhotoOverlay
       v-if="selectedPhotoIndex !== null"
       :photos="photosData"
