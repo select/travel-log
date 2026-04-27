@@ -65,8 +65,16 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const isOpen = ref(true)
+const isOpen = ref(false)
 const currentIndex = ref(props.initialIndex ?? 0)
+
+// Watch for initialIndex changes to auto-open overlay
+watch(() => props.initialIndex, (newIndex) => {
+  if (newIndex !== undefined && newIndex !== null) {
+    currentIndex.value = newIndex
+    isOpen.value = true
+  }
+}, { immediate: true })
 
 const currentPhoto = computed(() => props.photos[currentIndex.value])
 const baseUrl = useRuntimeConfig().app.baseURL || ''
