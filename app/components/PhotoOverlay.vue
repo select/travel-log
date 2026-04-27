@@ -25,7 +25,7 @@
       <!-- Image container -->
       <div class="max-w-[90vw] max-h-[90vh] relative">
         <img 
-          :src="`/img/${currentPhoto.file}`" 
+          :src="`${baseUrl}img/${currentPhoto.file}`" 
           class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
           :alt="currentPhoto.file"
         />
@@ -69,6 +69,7 @@ const isOpen = ref(true)
 const currentIndex = ref(props.initialIndex || 0)
 
 const currentPhoto = computed(() => props.photos[currentIndex.value])
+const baseUrl = useRuntimeConfig().app.baseURL || ''
 
 function close() {
   isOpen.value = false
