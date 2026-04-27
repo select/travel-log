@@ -66,7 +66,7 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(true)
-const currentIndex = ref(props.initialIndex || 0)
+const currentIndex = ref(props.initialIndex ?? 0)
 
 const currentPhoto = computed(() => props.photos[currentIndex.value])
 const baseUrl = useRuntimeConfig().app.baseURL || ''
