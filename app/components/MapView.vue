@@ -47,7 +47,10 @@ onMounted(async () => {
   const map = L.map(mapContainer.value!, { 
     center: [52.44, 13.43], 
     zoom: 13,
-    zoomControl: false
+    zoomControl: false,
+    tap: false, // Disable tap to prevent conflicts with marker clicks
+    touchZoom: true,
+    doubleClickZoom: true
   })
   
   L.control.zoom({ position: 'bottomleft' }).addTo(map)
@@ -165,22 +168,10 @@ onMounted(async () => {
         interactive: true
       })
       
-      const marker = L.marker([lat, lon], { icon, interactive: true })
-      marker.on('add', () => {
-        const el = marker.getElement()
-        if (el) {
-          el.style.cursor = 'pointer'
-          L.DomEvent.on(el, 'click', (e: Event) => {
-            L.DomEvent.stopPropagation(e)
-            selectedPhotoIndex.value = index
-          })
-          L.DomEvent.on(el, 'touchend', (e: Event) => {
-            L.DomEvent.stopPropagation(e)
-            selectedPhotoIndex.value = index
-          })
-        }
-      })
-      marker.addTo(map)
+      L.marker([lat, lon], { icon, interactive: true }).on('click', (e: L.LeafletMouseEvent) => {
+        L.DomEvent.stopPropagation(e.originalEvent)
+        selectedPhotoIndex.value = index
+      }).addTo(map)
     })
   } catch (e) {
     console.error('Photos load error:', e)
