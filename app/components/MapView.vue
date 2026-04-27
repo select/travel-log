@@ -159,14 +159,28 @@ onMounted(async () => {
       
       const icon = L.divIcon({
         html: bubbleHtml,
-        className: 'photo-marker cursor-pointer',
+        className: 'photo-marker',
         iconSize: [48, 40],
-        iconAnchor: [0, 20] // Tip of triangle at geo coord
+        iconAnchor: [0, 20], // Tip of triangle at geo coord
+        interactive: true
       })
       
-      L.marker([lat, lon], { icon, interactive: true }).on('click', () => {
-        selectedPhotoIndex.value = index
-      }).addTo(map)
+      const marker = L.marker([lat, lon], { icon, interactive: true })
+      marker.on('add', () => {
+        const el = marker.getElement()
+        if (el) {
+          el.style.cursor = 'pointer'
+          L.DomEvent.on(el, 'click', (e: Event) => {
+            L.DomEvent.stopPropagation(e)
+            selectedPhotoIndex.value = index
+          })
+          L.DomEvent.on(el, 'touchend', (e: Event) => {
+            L.DomEvent.stopPropagation(e)
+            selectedPhotoIndex.value = index
+          })
+        }
+      })
+      marker.addTo(map)
     })
   } catch (e) {
     console.error('Photos load error:', e)
@@ -188,8 +202,13 @@ function parseGeoCoord(coord: string): number {
   background: transparent !important;
   border: none !important;
   cursor: pointer !important;
+  pointer-events: auto !important;
 }
 .photo-marker img {
   cursor: pointer !important;
+  pointer-events: none !important;
+}
+.photo-marker > * {
+  pointer-events: auto !important;
 }
 </style>
