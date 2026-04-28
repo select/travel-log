@@ -29,10 +29,8 @@ const photos = ref<PhotoPoint[]>([])
 const photosData = ref<PhotoPoint[]>([])
 const selectedPhotoIndex = ref<number | null>(null)
 
-const tracks = [
-  { gpxUrl: `2026-part-1.gpx`, color: '#3b82f6' },
-  { gpxUrl: `2026-part-2.gpx`, color: '#ef4444' },
-]
+const config = useRuntimeConfig()
+const baseUrl = config.app.baseURL || ''
 
 const emit = defineEmits<{
   stats: [data: { distance?: string; elevation?: string; duration?: string }]
@@ -65,9 +63,23 @@ onMounted(async () => {
   const allLatLngs: [number, number][][] = []
   const allElevations: number[][] = []
   
+  // Load track list from tracks.json
+  interface TrackInfo { id: string; name: string; file: string; color: string }
+  const tracks: TrackInfo[] = [{ id: 'part-1', name: 'From Britz to Vienna', file: '2026-part-1.gpx', color: '#3b82f6' }]
+  try {
+    const tracksRes = await fetch(`${baseUrl}tracks.json`)
+    const tracksData = await tracksRes.json()
+    if (tracksData.tracks) {
+      tracks.length = 0
+      tracksData.tracks.forEach((t: TrackInfo) => tracks.push(t))
+    }
+  } catch (e) {
+    console.error('Failed to load tracks.json, using defaults')
+  }
+  
   for (const track of tracks) {
     try {
-      const response = await fetch(`${baseUrl}${track.gpxUrl}`)
+      const response = await fetch(`${baseUrl}${track.file}`)
       const gpxText = await response.text()
       
       const parser = new DOMParser()

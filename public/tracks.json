@@ -1,0 +1,22 @@
+{
+  "tracks": [
+    {
+      "id": "part-1",
+      "name": "From Britz to Vienna",
+      "file": "2026-part-1.gpx",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "part-2",
+      "name": "From Hindenberg to Vienna",
+      "file": "2026-part-2.gpx",
+      "color": "#ef4444"
+    },
+    {
+      "id": "part-3",
+      "name": "From Bautzen to Vienna",
+      "file": "2026-part-3.gpx",
+      "color": "#22c55e"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "tracks": [
+    {
+      "name": "From Britz to Vienna",
+      "distance_km": 94.9,
+      "distance_formatted": "94.9 km",
+      "elevation_min_m": -50,
+      "elevation_max_m": 167,
+      "elevation_formatted": "-50m \u2013 167m",
+      "duration_formatted": "6h 41m",
+      "id": "part-1",
+      "color": "#3b82f6"
+    },
+    {
+      "name": "From Hindenberg - \u017delnjojce to Vienna",
+      "distance_km": 107.9,
+      "distance_formatted": "107.9 km",
+      "elevation_min_m": 112,
+      "elevation_max_m": 273,
+      "elevation_formatted": "112m \u2013 273m",
+      "duration_formatted": "8h 23m",
+      "id": "part-2",
+      "color": "#ef4444"
+    },
+    {
+      "name": "From Bautzen - Budy\u0161in to Vienna",
+      "distance_km": 104.0,
+      "distance_formatted": "104.0 km",
+      "elevation_min_m": 249,
+      "elevation_max_m": 635,
+      "elevation_formatted": "249m \u2013 635m",
+      "duration_formatted": "9h 3m",
+      "id": "part-3",
+      "color": "#22c55e"
+    }
+  ]
+}
