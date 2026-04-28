@@ -24,11 +24,14 @@
       
       <!-- Image container -->
       <div class="max-w-[90vw] max-h-[90vh] relative z-0">
-        <img 
-          :src="`${baseUrl}images/${currentPhoto.file}`" 
-          class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
-          :alt="currentPhoto.file"
-        />
+        <div v-if="currentPhoto" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl overflow-hidden">
+          <img 
+            :key="`photo-${currentIndex}`"
+            :src="imageUrl"
+            class="block max-w-full max-h-[85vh] object-contain"
+            :alt="currentPhoto.file"
+          />
+        </div>
       </div>
       
       <!-- Next button -->
@@ -66,17 +69,24 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(false)
-const currentIndex = ref(props.initialIndex ?? 0)
+const currentIndex = ref(0)
+const imageUrl = ref('')
 
 watch(() => props.initialIndex, (newIndex) => {
   if (newIndex !== undefined && newIndex !== null) {
     currentIndex.value = newIndex
     isOpen.value = true
+    updateUrl()
   }
 }, { immediate: true })
 
 const currentPhoto = computed(() => props.photos[currentIndex.value])
-const baseUrl = useRuntimeConfig().app.baseURL || ''
+
+function updateUrl() {
+  if (currentPhoto.value) {
+    imageUrl.value = `/images/${currentPhoto.value.file}?v=${Date.now()}-${currentIndex.value}`
+  }
+}
 
 function close() {
   isOpen.value = false
@@ -86,12 +96,14 @@ function close() {
 function prev() {
   if (currentIndex.value > 0) {
     currentIndex.value--
+    updateUrl()
   }
 }
 
 function next() {
   if (currentIndex.value < props.photos.length - 1) {
     currentIndex.value++
+    updateUrl()
   }
 }
 

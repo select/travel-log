@@ -1,6 +1,6 @@
 <template>
-  <header class="absolute top-4 left-4 right-4 z-[1000] flex items-center justify-between px-5 py-2.5 bg-[#0f0f14] backdrop-blur-xl rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] border border-white/[0.08]">
-    <h1 class="font-serif text-lg font-medium text-white/90">
+  <header class="absolute top-4 left-4 right-4 z-[1000] flex items-center justify-between px-4 py-2 bg-[#0f0f14] backdrop-blur-xl rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] border border-white/[0.08]">
+    <h1 class="font-serif text-xl font-bold text-[#e8a020] leading-tight m-0">
       Travel Log
     </h1>
     <div v-if="stats?.distance" class="font-sans text-sm text-white/50">

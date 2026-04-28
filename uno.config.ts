@@ -1,10 +1,12 @@
 import { defineConfig } from 'unocss'
+import presetUno from 'unocss/preset-uno'
+import presetMini from 'unocss/preset-mini'
 import presetWebFonts from '@unocss/preset-web-fonts'
 
 export default defineConfig({
   presets: [
-    require('unocss/preset-uno'),
-    require('unocss/preset-mini'),
+    presetUno(),
+    presetMini(),
     presetWebFonts({
       provider: 'google',
       fonts: {
