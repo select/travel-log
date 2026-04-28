@@ -84,7 +84,8 @@ const currentPhoto = computed(() => props.photos[currentIndex.value])
 
 function updateUrl() {
   if (currentPhoto.value) {
-    imageUrl.value = `/images/${currentPhoto.value.file}?v=${Date.now()}-${currentIndex.value}`
+    const base = useRuntimeConfig().app.baseURL || '/'
+    imageUrl.value = `${base}images/${currentPhoto.value.file}?v=${Date.now()}-${currentIndex.value}`
   }
 }
 
