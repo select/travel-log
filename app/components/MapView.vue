@@ -214,4 +214,30 @@ function parseGeoCoord(coord: string): number {
 .photo-marker > * {
   pointer-events: auto !important;
 }
+
+/* Leaflet zoom buttons - dark theme */
+.leaflet-control-zoom a {
+  background: #0f0f14 !important;
+  color: white !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 30px !important;
+  font-size: 16px !important;
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(255,255,255,0.08) !important;
+}
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+.leaflet-control-zoom-in {
+  border-radius: 10px 10px 0 0 !important;
+}
+.leaflet-control-zoom-out {
+  border-radius: 0 0 10px 10px !important;
+}
 </style>

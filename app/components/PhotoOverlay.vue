@@ -5,9 +5,9 @@
       class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
       @click.self="close"
     >
-      <!-- Close button -->
+      <!-- Close button at top -->
       <button 
-        class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-2xl font-bold"
+        class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-2xl font-bold z-10"
         @click="close"
       >
         ×
@@ -16,14 +16,14 @@
       <!-- Prev button -->
       <button 
         v-if="currentIndex > 0"
-        class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-2xl"
+        class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-2xl z-10"
         @click="prev"
       >
         ‹
       </button>
       
       <!-- Image container -->
-      <div class="max-w-[90vw] max-h-[90vh] relative">
+      <div class="max-w-[90vw] max-h-[90vh] relative z-0">
         <img 
           :src="`${baseUrl}images/${currentPhoto.file}`" 
           class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
@@ -34,7 +34,7 @@
       <!-- Next button -->
       <button 
         v-if="currentIndex < photos.length - 1"
-        class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-2xl"
+        class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white text-2xl z-10"
         @click="next"
       >
         ›
@@ -68,7 +68,6 @@ const emit = defineEmits<{
 const isOpen = ref(false)
 const currentIndex = ref(props.initialIndex ?? 0)
 
-// Watch for initialIndex changes to auto-open overlay
 watch(() => props.initialIndex, (newIndex) => {
   if (newIndex !== undefined && newIndex !== null) {
     currentIndex.value = newIndex

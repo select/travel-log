@@ -1,11 +1,18 @@
 import { defineConfig } from 'unocss'
-import presetUno from 'unocss/preset-uno'
-import presetMini from 'unocss/preset-mini'
+import presetWebFonts from '@unocss/preset-web-fonts'
 
 export default defineConfig({
   presets: [
-    presetUno(),
-    presetMini(),
+    require('unocss/preset-uno'),
+    require('unocss/preset-mini'),
+    presetWebFonts({
+      provider: 'google',
+      fonts: {
+        sans: 'DM Sans:400,500',
+        serif: 'Fraunces:400,700',
+        mono: 'IBM Plex Mono:400,500',
+      },
+    }),
   ],
   theme: {
     colors: {
