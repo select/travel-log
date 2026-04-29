@@ -8,37 +8,22 @@
       @close="selectedPhotoIndex = null"
     />
     
-    <!-- Controls panel -->
-    <div class="absolute bottom-20 left-4 z-[1000] flex flex-col gap-2">
+    <!-- Toggle controls - above zoom buttons -->
+    <div class="absolute bottom-[106px] left-[12px] z-[1000] flex flex-col gap-0 rounded-xl overflow-hidden shadow-lg">
       <button
         @click="showThumbs = !showThumbs"
-        class="w-10 h-10 rounded-lg bg-[#0f0f14] border border-white/[0.08] flex items-center justify-center text-white shadow-lg hover:bg-white/10 transition-colors"
+        class="w-8 h-8 flex items-center justify-center text-white bg-black"
         :title="showThumbs ? 'Hide thumbnails' : 'Show thumbnails'"
       >
-        <span :class="showThumbs ? 'i-mdi:image' : 'i-mdi:image-off'" class="text-xl" />
+        <span :class="showThumbs ? 'i-mdi:image' : 'i-mdi:image-off'" class="text-base" />
       </button>
       <button
         @click="showStats = !showStats"
-        class="w-10 h-10 rounded-lg bg-[#0f0f14] border border-white/[0.08] flex items-center justify-center text-white shadow-lg hover:bg-white/10 transition-colors"
-        :title="showStats ? 'Hide stats' : 'Show stats'"
+        class="w-8 h-8 flex items-center justify-center text-white bg-black border-t border-white/[0.08]"
+        :title="showStats ? 'Hide track stats' : 'Show track stats'"
       >
-        <span :class="showStats ? 'i-mdi:chart-line' : 'i-mdi:chart-line-variant'" class="text-xl" />
+        <span :class="showStats ? 'i-mdi:map-marker' : 'i-mdi:map-marker-off'" class="text-base" />
       </button>
-    </div>
-    
-    <!-- Track stats panel -->
-    <div v-if="showStats && trackStats.length > 0" class="absolute bottom-20 left-16 z-[1000] bg-[#0f0f14]/95 backdrop-blur-xl rounded-xl border border-white/[0.08] shadow-lg p-3 max-w-[200px]">
-      <div class="text-xs text-white/50 mb-2 uppercase tracking-wide">Tracks</div>
-      <div v-for="stat in trackStats" :key="stat.name" class="mb-2 last:mb-0">
-        <div class="text-sm font-medium" :style="{ color: stat.color }">{{ stat.name }}</div>
-        <div class="text-xs text-white/70 space-y-0.5">
-          <div v-if="stat.distance">{{ stat.distance }}</div>
-          <div v-if="stat.maxSpeed">Max: {{ stat.maxSpeed }}</div>
-          <div v-if="stat.ascent">↑ {{ stat.ascent }}</div>
-          <div v-if="stat.movingTime">Moving: {{ stat.movingTime }}</div>
-          <div v-if="stat.totalTime">Total: {{ stat.totalTime }}</div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -72,8 +57,9 @@ const photos = ref<PhotoPoint[]>([])
 const photosData = ref<PhotoPoint[]>([])
 const selectedPhotoIndex = ref<number | null>(null)
 const showThumbs = ref(true)
-const showStats = ref(true)
+const showStats = ref(false)
 const trackStats = ref<TrackStats[]>([])
+const statsMarkers = ref<any[]>([])
 const photoMarkers = ref<any[]>([])
 const mapRef = ref<any>(null)
 
@@ -159,7 +145,7 @@ onMounted(async () => {
         allLatLngs.push(latlngs)
         allElevations.push(elevations)
         
-        // Calculate track stats
+        // Calculate track stats FIRST
         const trackStat: TrackStats = { name: track.name, color: track.color }
         
         // Distance
@@ -186,38 +172,21 @@ onMounted(async () => {
           if (totalMs > 0) {
             trackStat.totalTime = formatDuration(totalMs)
             
-            // Calculate moving time (gaps > 60s likely stopped)
-            let movingMs = 0
-            let gapStart = 0
-            for (let i = 1; i < timestamps.length; i++) {
-              const gap = timestamps[i].getTime() - timestamps[i-1].getTime()
-              if (gap > 60000) {
-                // Stopped, don't count this gap
-                movingMs += timestamps[gapStart].getTime() - timestamps[0].getTime() - (gapStart > 0 ? (timestamps[gapStart].getTime() - timestamps[gapStart-1].getTime()) : 0)
-                gapStart = i
-              }
-            }
-            // Add remaining time
-            movingMs = totalMs - (timestamps.length > 10 ? timestamps.slice(-10).reduce((a, t, i) => i === 0 ? 0 : a + (t.getTime() - timestamps[i-1].getTime()), 0) : 0)
-            
-            // Simpler approach: use median speed to estimate moving time
             const speeds: number[] = []
             for (let i = 1; i < latlngs.length; i++) {
               const dist = map.distance(latlngs[i-1], latlngs[i])
               const time = timestamps[i] && timestamps[i-1] ? (timestamps[i].getTime() - timestamps[i-1].getTime()) / 1000 : 0
               if (time > 0) {
-                const speed = (dist / time) * 3.6 // km/h
+                const speed = (dist / time) * 3.6
                 if (speed > 2 && speed < 50) speeds.push(speed)
               }
             }
             
-            // Max speed
             if (speeds.length > 0) {
               const maxSpeed = Math.max(...speeds)
               trackStat.maxSpeed = `${maxSpeed.toFixed(1)} km/h`
               
-              // Moving time: total dist / median speed
-              if (trackDist > 0 && speeds.length > 0) {
+              if (trackDist > 0) {
                 speeds.sort((a, b) => a - b)
                 const medianSpeed = speeds[Math.floor(speeds.length / 2)]
                 const movingHours = (trackDist / 1000) / medianSpeed
@@ -228,6 +197,52 @@ onMounted(async () => {
         }
         
         trackStats.value.push(trackStat)
+        
+        // Add stats marker at track midpoint
+        const midIdx = Math.floor(latlngs.length / 2)
+        const midPoint = latlngs[midIdx]
+        const nextPoint = latlngs[Math.min(midIdx + 5, latlngs.length - 1)]
+        const offsetLat = midPoint[0] + (nextPoint[0] - midPoint[0]) * 0.02
+        const offsetLon = midPoint[1] + (nextPoint[1] - midPoint[1]) * 0.02 + 0.005
+        
+        const statsLines: string[] = []
+        if (trackStat.distance) statsLines.push(trackStat.distance)
+        if (trackStat.maxSpeed) statsLines.push(`Max ${trackStat.maxSpeed}`)
+        if (trackStat.ascent) statsLines.push(`↑ ${trackStat.ascent}`)
+        if (trackStat.movingTime) statsLines.push(trackStat.movingTime)
+        if (trackStat.totalTime) statsLines.push(trackStat.totalTime)
+        
+        if (statsLines.length > 0) {
+          const statsHtml = `
+            <div style="
+              background: rgba(15,15,20,0.95);
+              backdrop-filter: blur(12px);
+              border: 1px solid rgba(255,255,255,0.08);
+              border-radius: 8px;
+              padding: 6px 10px;
+              font-size: 11px;
+              line-height: 1.4;
+              box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+              white-space: nowrap;
+            ">
+              <div style="color: ${track.color}; font-weight: 500; margin-bottom: 2px;">Tag ${trackStats.value.length}</div>
+              ${statsLines.map(line => `<div style="color: rgba(255,255,255,0.8);">${line}</div>`).join('')}
+            </div>
+          `
+          
+          const statsIcon = L.divIcon({
+            html: statsHtml,
+            className: 'track-stats-marker',
+            iconSize: [120, 'auto'],
+            iconAnchor: [0, 12],
+          })
+          
+          const statsMarker = L.marker([offsetLat, offsetLon], { icon: statsIcon, interactive: false })
+          if (showStats.value) {
+            statsMarker.addTo(map)
+          }
+          statsMarkers.value.push(statsMarker)
+        }
       }
       
     } catch (e) {
@@ -334,6 +349,19 @@ watch(showThumbs, (show) => {
   }
 })
 
+// Watch for stats toggle changes
+watch(showStats, (show) => {
+  if (!mapRef.value) return
+  
+  if (show) {
+    statsMarkers.value.forEach(marker => marker.addTo(mapRef.value))
+  } else {
+    statsMarkers.value.forEach(marker => {
+      try { marker.remove() } catch(e) {}
+    })
+  }
+})
+
 function formatDuration(ms: number): string {
   const hours = Math.floor(ms / 3600000)
   const mins = Math.floor((ms % 3600000) / 60000)
@@ -365,6 +393,13 @@ function parseGeoCoord(coord: string): number {
 .photo-marker > * {
   pointer-events: auto !important;
 }
+
+/* Track stats markers */
+.track-stats-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
 
 /* Leaflet zoom buttons - dark theme */
 .leaflet-control-zoom a {
