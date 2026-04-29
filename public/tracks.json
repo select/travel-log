@@ -17,6 +17,12 @@
       "name": "From Bautzen to Vienna",
       "file": "2026-part-3.gpx",
       "color": "#22c55e"
+    },
+    {
+      "id": "part-4",
+      "name": "From Dresden to Vienna",
+      "file": "2026-part-4.gpx",
+      "color": "#a855f7"
     }
   ]
 }

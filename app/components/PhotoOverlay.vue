@@ -76,9 +76,21 @@ watch(() => props.initialIndex, (newIndex) => {
   if (newIndex !== undefined && newIndex !== null) {
     currentIndex.value = newIndex
     isOpen.value = true
+  }
+})
+
+watch([isOpen, currentIndex], () => {
+  if (isOpen.value && currentPhoto.value) {
     updateUrl()
   }
-}, { immediate: true })
+})
+
+onMounted(() => {
+  if (props.initialIndex !== undefined && props.initialIndex !== null) {
+    currentIndex.value = props.initialIndex
+    isOpen.value = true
+  }
+})
 
 const currentPhoto = computed(() => props.photos[currentIndex.value])
 

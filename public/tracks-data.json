@@ -32,6 +32,17 @@
       "duration_formatted": "9h 3m",
       "id": "part-3",
       "color": "#22c55e"
+    },
+    {
+      "name": "From Pt\u00fdrov to Vienna",
+      "distance_km": 130.5,
+      "distance_formatted": "130.5 km",
+      "elevation_min_m": 225,
+      "elevation_max_m": 639,
+      "elevation_formatted": "225m \u2013 639m",
+      "duration_formatted": "11h 8m",
+      "id": "part-4",
+      "color": "#a855f7"
     }
   ]
 }
