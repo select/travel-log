@@ -2,11 +2,19 @@ import { defineConfig } from 'unocss'
 import presetUno from 'unocss/preset-uno'
 import presetMini from 'unocss/preset-mini'
 import presetWebFonts from '@unocss/preset-web-fonts'
+import presetIcons from '@unocss/preset-icons'
 
 export default defineConfig({
   presets: [
     presetUno(),
     presetMini(),
+    presetIcons({
+      scale: 1.2,
+      extraProperties: {
+        'display': 'inline-block',
+        'vertical-align': 'middle',
+      },
+    }),
     presetWebFonts({
       provider: 'google',
       fonts: {
