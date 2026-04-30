@@ -43,6 +43,17 @@
       "duration_formatted": "11h 8m",
       "id": "part-4",
       "color": "#a855f7"
+    },
+    {
+      "name": "From \u00dastupky to Vienna",
+      "distance_km": 98.7,
+      "distance_formatted": "98.7 km",
+      "elevation_min_m": 447,
+      "elevation_max_m": 662,
+      "elevation_formatted": "447m \u2013 662m",
+      "duration_formatted": "11h 2m",
+      "id": "part-5",
+      "color": "#f97316"
     }
   ]
 }
