@@ -54,6 +54,17 @@
       "duration_formatted": "11h 2m",
       "id": "part-5",
       "color": "#f97316"
+    },
+    {
+      "name": "From T\u0159eb\u00ed\u010d to Znojmo",
+      "distance_km": 43.0,
+      "distance_formatted": "43.0 km",
+      "elevation_min_m": 405,
+      "elevation_max_m": 583,
+      "elevation_formatted": "405m \u2013 583m",
+      "duration_formatted": "3h 15m",
+      "id": "part-6",
+      "color": "#06b6d4"
     }
   ]
 }

@@ -29,6 +29,12 @@
       "name": "Part 5",
       "file": "2026-part-5.gpx",
       "color": "#f97316"
+    },
+    {
+      "id": "part-6",
+      "name": "Part 6",
+      "file": "2026-part-6.gpx",
+      "color": "#06b6d4"
     }
   ]
 }
