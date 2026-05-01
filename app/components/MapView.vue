@@ -12,14 +12,14 @@
     <div class="absolute bottom-[106px] left-[12px] z-[1000] flex flex-col gap-0 rounded-xl overflow-hidden shadow-lg">
       <button
         @click="showThumbs = !showThumbs"
-        class="w-8 h-8 flex items-center justify-center text-white bg-black"
+        class="w-8 h-8 flex items-center justify-center text-white bg-black border-0"
         :title="showThumbs ? 'Hide thumbnails' : 'Show thumbnails'"
       >
         <span :class="showThumbs ? 'i-mdi:image' : 'i-mdi:image-off'" class="text-base" />
       </button>
       <button
         @click="showStats = !showStats"
-        class="w-8 h-8 flex items-center justify-center text-white bg-black border-t border-white/[0.08]"
+        class="w-8 h-8 flex items-center justify-center text-white bg-black border-0"
         :title="showStats ? 'Hide track stats' : 'Show track stats'"
       >
         <span :class="showStats ? 'i-mdi:map-marker' : 'i-mdi:map-marker-off'" class="text-base" />
