@@ -28,6 +28,8 @@ travel-log/
 
 **Source images location:** `/data/data/com.termux/files/home/storage/shared/dev/`
 
+**Source GPX location:** `/data/data/com.termux/files/home/downloads/`
+
 ---
 
 ## Order of Operations
@@ -145,6 +147,7 @@ cp /path/to/new-track.gpx public/
 - **output_dir:** Target directory (default: `public`)
 - **Skips:** Files with existing webp + thumbnail
 - **Progress:** Shows [n/total] with sizes
+- **Timeout:** Can take 2-5 minutes per image on mobile devices
 
 ### generate-images-json.sh
 
@@ -169,6 +172,7 @@ cp /path/to/new-track.gpx public/
 
 - **--from-index:** Reads `tracks.json`, outputs `tracks-data.json`
 - **Outputs to stdout** if no output file specified
+- **Timeout:** Usually fast (~10s for 6 tracks)
 
 ---
 
@@ -190,6 +194,10 @@ git commit -m "Update: new images and track"
 git push
 ```
 
+**Note:** `pnpm build` can take 2-5 minutes on mobile devices. Use longer timeout if running programmatically.
+
+**Preview:** User runs `pnpm preview` themselves to test before deploying.
+
 ---
 
 ## Data Flow
@@ -204,7 +212,7 @@ image-to-webp.sh ──────────────────► publi
     ▼
 generate-images-json.sh ──────────► public/images.json
     │
-Source GPX (storage/downloads/*.gpx)
+Source GPX (downloads/*.gpx)
     │
     ▼
 Copy to public/*.gpx ─────────────► public/*.gpx
