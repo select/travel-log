@@ -11,14 +11,14 @@
     <!-- Toggle controls - above zoom buttons -->
     <div class="absolute bottom-[106px] left-[12px] z-[1000] flex flex-col gap-0 rounded-xl overflow-hidden shadow-lg">
       <button
-        @click="showThumbs = !showThumbs"
+        @click="showThumbs = !showThumbs; if (showThumbs) showStats = false"
         class="w-8 h-8 flex items-center justify-center text-white bg-black border-0"
         :title="showThumbs ? 'Hide thumbnails' : 'Show thumbnails'"
       >
         <span :class="showThumbs ? 'i-mdi:image' : 'i-mdi:image-off'" class="text-base" />
       </button>
       <button
-        @click="showStats = !showStats"
+        @click="showStats = !showStats; if (showStats) showThumbs = false"
         class="w-8 h-8 flex items-center justify-center text-white bg-black border-0"
         :title="showStats ? 'Hide track stats' : 'Show track stats'"
       >
