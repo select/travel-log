@@ -65,6 +65,17 @@
       "duration_formatted": "3h 15m",
       "id": "part-6",
       "color": "#06b6d4"
+    },
+    {
+      "name": "From Kravsko to Vienna",
+      "distance_km": 112.2,
+      "distance_formatted": "112.2 km",
+      "elevation_min_m": 212,
+      "elevation_max_m": 408,
+      "elevation_formatted": "212m \u2013 408m",
+      "duration_formatted": "9h 7m",
+      "id": "part-7",
+      "color": "#eab308"
     }
   ]
 }
