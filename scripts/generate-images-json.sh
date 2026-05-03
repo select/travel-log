@@ -62,16 +62,16 @@ for webp in webp_files:
     if webp in existing:
         print(f"  = {webp} (kept existing)")
         continue
-    
+
     name = webp.replace('.webp', '')
-    
+
     # Try both .jpg and .JPG extensions
     src_jpg = os.path.join(source_dir, f"{name}.jpg")
     if not os.path.exists(src_jpg):
         src_jpg = os.path.join(source_dir, f"{name}.JPG")
-    
+
     lat = lon = date = ""
-    
+
     if os.path.exists(src_jpg):
         try:
             lat = subprocess.check_output(
@@ -88,14 +88,14 @@ for webp in webp_files:
             ).strip()
         except:
             pass
-    
+
     existing[webp] = {
         "file": webp,
         "lat": lat,
         "lon": lon,
         "date": date
     }
-    
+
     status = "GPS" if lat else "no GPS"
     print(f"  + {webp} ({status})")
     new_count += 1
@@ -107,7 +107,18 @@ with open(output_file, 'w') as f:
     json.dump(images, f, indent=2)
 
 print(f"\nSaved {len(images)} entries ({new_count} new) to {output_file}")
+
+# Explicit flush/close to reduce segfault risk
+if hasattr(sys.stdout, 'flush'):
+    sys.stdout.flush()
 PYEOF
+    local py_exit=$?
+    # Verify output was written even if python segfaulted on exit
+    if [[ -f "$output_file" ]] && python3 -c "import json; json.load(open('$output_file'))" 2>/dev/null; then
+        return 0
+    else
+        return $py_exit
+    fi
 }
 
 check_dependencies

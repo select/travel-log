@@ -1,25 +1,17 @@
 {
   "tracks": [
     {
-      "name": "From Britz to Vienna",
-      "distance_km": 94.9,
-      "distance_formatted": "94.9 km",
-      "elevation_min_m": -50,
-      "elevation_max_m": 167,
-      "elevation_formatted": "-50m \u2013 167m",
-      "duration_formatted": "6h 41m",
-      "id": "part-1",
-      "color": "#3b82f6"
-    },
-    {
-      "name": "From Hindenberg - \u017delnjojce to Vienna",
-      "distance_km": 107.9,
-      "distance_formatted": "107.9 km",
-      "elevation_min_m": 112,
-      "elevation_max_m": 273,
-      "elevation_formatted": "112m \u2013 273m",
-      "duration_formatted": "8h 23m",
-      "id": "part-2",
+      "name": "From Britz to V  [0;32m✓[0m 2026-part-1.gpx: 94.9 km, -50m – 167m, 6h 41m
+  [0;32m✓[0m 2026-part-2.gpx: 107.9 km, 112m – 273m, 8h 23m
+  [0;32m✓[0m 2026-part-3.gpx: 104.0 km, 249m – 635m, 9h 3m
+  [0;32m✓[0m 2026-part-4.gpx: 130.5 km, 225m – 639m, 11h 8m
+  [0;32m✓[0m 2026-part-5.gpx: 98.7 km, 447m – 662m, 11h 2m
+  [0;32m✓[0m 2026-part-6.gpx: 43.0 km, 405m – 583m, 3h 15m
+  [0;32m✓[0m 2026-part-7.gpx: 112.2 km, 212m – 408m, 9h 7m
+  [0;32m✓[0m 2026-part-8.gpx: 12.3 km, 261m – 496m, 1h 21m
+
+[0;32m✓[0m Saved to public/tracks-data.json
+rt-2",
       "color": "#ef4444"
     },
     {
@@ -76,6 +68,17 @@
       "duration_formatted": "9h 7m",
       "id": "part-7",
       "color": "#eab308"
+    },
+    {
+      "name": "Bike Ride",
+      "distance_km": 12.3,
+      "distance_formatted": "12.3 km",
+      "elevation_min_m": 261,
+      "elevation_max_m": 496,
+      "elevation_formatted": "261m \u2013 496m",
+      "duration_formatted": "1h 21m",
+      "id": "part-8",
+      "color": "#ec4899"
     }
   ]
 }
