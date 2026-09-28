@@ -127,6 +127,21 @@ onMounted(async () => {
         glMap.setPaintProperty(id, property, color)
       }
     }
+    if (props.tourId === 'altmuehl2026') {
+      // Highlight only the named Altmühl waterway; other rivers keep the muted palette.
+      glMap.addLayer({
+        id: 'altmuehl-river',
+        type: 'line',
+        source: 'openmaptiles',
+        'source-layer': 'waterway',
+        filter: ['all', ['==', ['get', 'class'], 'river'], ['==', ['get', 'name'], 'Altmühl']],
+        paint: {
+          'line-color': '#1d4e89',
+          'line-width': ['interpolate', ['linear'], ['zoom'], 9, 1.5, 13, 3, 17, 6],
+          'line-opacity': 0.95,
+        },
+      }, 'building')
+    }
     // Hide numbered road shields (e.g. B13), but keep street names visible.
     for (const id of ['highway-shield-non-us', 'highway-shield-us-interstate', 'road_shield_us']) {
       if (glMap.getLayer(id)) glMap.setLayoutProperty(id, 'visibility', 'none')
