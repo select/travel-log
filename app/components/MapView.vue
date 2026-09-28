@@ -102,9 +102,34 @@ onMounted(async () => {
     style: 'https://tiles.openfreemap.org/styles/positron',
   }).addTo(map)
   basemap.getMaplibreMap().on('load', () => {
+    const glMap = basemap.getMaplibreMap()
+    // Give Positron a warm paper-and-sage palette without tinting routes or photos.
+    const warmColors: Record<string, Record<string, string>> = {
+      background: { 'background-color': '#f5f1e9' },
+      park: { 'fill-color': '#e6e9dc' },
+      landuse_residential: { 'fill-color': '#eee9df' },
+      landcover_wood: { 'fill-color': '#dfe5d6' },
+      building: { 'fill-color': '#eae3d9', 'fill-outline-color': '#d8cfc3' },
+      water: { 'fill-color': '#cbd5d2' },
+      waterway: { 'line-color': '#cbd5d2' },
+      road_area_pier: { 'fill-color': '#f5f1e9' },
+      road_pier: { 'line-color': '#f5f1e9' },
+      highway_path: { 'line-color': '#e7dfd4' },
+      highway_minor: { 'line-color': '#dfd6ca' },
+      highway_major_casing: { 'line-color': '#d9cfc1' },
+      highway_major_inner: { 'line-color': '#fffaf2' },
+      highway_motorway_casing: { 'line-color': '#d9cfc1' },
+      highway_motorway_bridge_casing: { 'line-color': '#d9cfc1' },
+    }
+    for (const [id, colors] of Object.entries(warmColors)) {
+      if (!glMap.getLayer(id)) continue
+      for (const [property, color] of Object.entries(colors)) {
+        glMap.setPaintProperty(id, property, color)
+      }
+    }
     // Hide numbered road shields (e.g. B13), but keep street names visible.
     for (const id of ['highway-shield-non-us', 'highway-shield-us-interstate', 'road_shield_us']) {
-      basemap.getMaplibreMap().setLayoutProperty(id, 'visibility', 'none')
+      if (glMap.getLayer(id)) glMap.setLayoutProperty(id, 'visibility', 'none')
     }
   })
 
