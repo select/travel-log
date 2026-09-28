@@ -31,6 +31,8 @@
 
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 
 interface PhotoPoint {
   file: string
@@ -78,7 +80,12 @@ let disposed = false
 onMounted(async () => {
   await nextTick()
   const L = (await import('leaflet')).default
+  const [{ setWorkerUrl }, { maplibreGL }] = await Promise.all([
+    import('maplibre-gl'),
+    import('@maplibre/maplibre-gl-leaflet'),
+  ])
   if (disposed) return
+  setWorkerUrl(workerUrl)
   const map = L.map(mapContainer.value!, { 
     center: [52.44, 13.43], 
     zoom: 13,
@@ -91,9 +98,15 @@ onMounted(async () => {
   mapRef.value = map
   L.control.zoom({ position: 'bottomleft' }).addTo(map)
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  const basemap = maplibreGL({
+    style: 'https://tiles.openfreemap.org/styles/positron',
   }).addTo(map)
+  basemap.getMaplibreMap().on('load', () => {
+    // Hide numbered road shields (e.g. B13), but keep street names visible.
+    for (const id of ['highway-shield-non-us', 'highway-shield-us-interstate', 'road_shield_us']) {
+      basemap.getMaplibreMap().setLayoutProperty(id, 'visibility', 'none')
+    }
+  })
 
   const allLatLngs: [number, number][][] = []
   const allElevations: number[][] = []
