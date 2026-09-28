@@ -128,13 +128,13 @@ onMounted(async () => {
       }
     }
     if (props.tourId === 'altmuehl2026') {
-      // Highlight only the named Altmühl waterway; other rivers keep the muted palette.
+      // Upstream Altmühl segments are tagged as streams, so filter by name rather than class.
       glMap.addLayer({
         id: 'altmuehl-river',
         type: 'line',
         source: 'openmaptiles',
         'source-layer': 'waterway',
-        filter: ['all', ['==', ['get', 'class'], 'river'], ['==', ['get', 'name'], 'Altmühl']],
+        filter: ['==', ['get', 'name'], 'Altmühl'],
         paint: {
           'line-color': '#1d4e89',
           'line-width': ['interpolate', ['linear'], ['zoom'], 9, 1.5, 13, 3, 17, 6],
