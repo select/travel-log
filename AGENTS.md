@@ -16,9 +16,11 @@ Source images on Termux: `/data/data/com.termux/files/home/storage/shared/dev/`.
 ```bash
 ./scripts/image-to-webp.sh /path/to/source-images public/tours/<id>
 ./scripts/generate-images-json.sh /path/to/source-images public/tours/<id>/images.json
+# For photos without GPS, infer coordinates from EXIF time and timed GPX points
+python3 scripts/locate-images-from-gpx.py public/tours/<id>
 ```
 
-The converter creates `images/*.webp` (max 2048px, quality 85) and `thumbnails/*.webp` (300x300, quality 80), skipping files with both outputs. The metadata script preserves existing JSON entries and uses exiftool or Python Pillow on the source JPGs for GPS/time. Photo `file` entries are basenames inside the tour's `images/` directory.
+The converter creates `images/*.webp` (max 2048px, quality 85) and `thumbnails/*.webp` (300x300, quality 80), skipping files with both outputs. The metadata script preserves existing JSON entries and uses exiftool or Python Pillow on the source JPGs for GPS/time. Photo `file` entries are basenames inside the tour's `images/` directory. The GPX locator interprets photo times as Europe/Berlin local time by default (`--timezone` overrides this), preserves camera GPS and marks inferred entries with `location_source: "gpx-estimate"`. It interpolates within short GPX gaps and snaps to the closest track point otherwise, up to 10 minutes away.
 
 ## Adding GPX tracks
 

@@ -26,6 +26,8 @@ To add another tour, create `public/tours/<id>/tracks.json` with `{"tracks":[]}`
 ./scripts/image-to-webp.sh /path/to/source-photos public/tours/<id>
 # Generate GPS metadata from those source photos; preserves existing entries
 ./scripts/generate-images-json.sh /path/to/source-photos public/tours/<id>/images.json
+# Estimate missing GPS from EXIF timestamps and GPX tracks (local time defaults to Europe/Berlin)
+python3 scripts/locate-images-from-gpx.py public/tours/<id>
 # Generate optional GPX summary after adding files to tracks.json
 ./scripts/extract-gpx-data.sh --from-index public/tours/<id>/tracks.json
 
@@ -34,4 +36,4 @@ pnpm dev
 pnpm build
 ```
 
-The metadata scripts default to the `altmuehl2026` tour when no output/index argument is supplied. `generate-images-json.sh` requires exiftool or Python Pillow; image conversion requires ImageMagick or cwebp.
+The metadata scripts default to the `altmuehl2026` tour when no output/index argument is supplied. `generate-images-json.sh` requires exiftool or Python Pillow; image conversion requires ImageMagick or cwebp. The GPX locator preserves camera GPS, interpolates between nearby timed GPX points, and snaps to the nearest track point where interpolation is not possible (within 10 minutes); estimated entries are marked `location_source: "gpx-estimate"`.
