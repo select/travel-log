@@ -54,20 +54,20 @@ process_image() {
     
     # Convert to full-size WebP
     if [[ "$CONVERT" == "magick" ]]; then
-        magick "$input" -quality "$FULL_QUALITY" -resize 2048x2048\> "$full_output" 2>/dev/null
+        magick "$input" -auto-orient -resize 2048x2048\> -quality "$FULL_QUALITY" -strip "$full_output" 2>/dev/null
     elif [[ "$CONVERT" == "convert" ]]; then
-        convert "$input" -quality "$FULL_QUALITY" -resize 2048x2048\> "$full_output" 2>/dev/null
+        convert "$input" -auto-orient -resize 2048x2048\> -quality "$FULL_QUALITY" -strip "$full_output" 2>/dev/null
     else
         cwebp -q "$FULL_QUALITY" -resize 2048 0 "$input" -o "$full_output" 2>/dev/null
     fi
     
     # Create thumbnail
     if [[ "$CONVERT" == "magick" ]]; then
-        magick "$input" -quality "$THUMB_QUALITY" -resize "${THUMB_SIZE}x${THUMB_SIZE}"^ \
-            -gravity center -extent "${THUMB_SIZE}x${THUMB_SIZE}" "$thumb_output" 2>/dev/null
+        magick "$input" -auto-orient -resize "${THUMB_SIZE}x${THUMB_SIZE}"^ \
+            -gravity center -extent "${THUMB_SIZE}x${THUMB_SIZE}" -quality "$THUMB_QUALITY" -strip "$thumb_output" 2>/dev/null
     elif [[ "$CONVERT" == "convert" ]]; then
-        convert "$input" -quality "$THUMB_QUALITY" -resize "${THUMB_SIZE}x${THUMB_SIZE}"^ \
-            -gravity center -extent "${THUMB_SIZE}x${THUMB_SIZE}" "$thumb_output" 2>/dev/null
+        convert "$input" -auto-orient -resize "${THUMB_SIZE}x${THUMB_SIZE}"^ \
+            -gravity center -extent "${THUMB_SIZE}x${THUMB_SIZE}" -quality "$THUMB_QUALITY" -strip "$thumb_output" 2>/dev/null
     else
         cwebp -q "$THUMB_QUALITY" -resize $THUMB_SIZE $THUMB_SIZE "$input" -o "$thumb_output" 2>/dev/null
     fi

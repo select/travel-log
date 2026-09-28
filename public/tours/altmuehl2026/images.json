@@ -462,9 +462,9 @@
   },
   {
     "file": "PANO_20260926_162317.webp",
-    "lat": "48 deg 52' 3.956179\" N",
-    "lon": "11 deg 5' 49.738209\" E",
+    "lat": "48 deg 52' 3.079652\" N",
+    "lon": "11 deg 5' 47.966517\" E",
     "date": "2026:09:26 16:23:17",
-    "location_source": "gpx-estimate"
+    "location_source": "nearby-photo"
   }
 ]
