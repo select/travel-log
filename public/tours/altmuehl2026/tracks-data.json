@@ -1,0 +1,37 @@
+{
+  "tracks": [
+    {
+      "name": "Altm\u00fchltal",
+      "distance_km": 78.1,
+      "distance_formatted": "78.1 km",
+      "elevation_min_m": 415,
+      "elevation_max_m": 548,
+      "elevation_formatted": "415m \u2013 548m",
+      "duration_formatted": "9h 16m",
+      "id": "tag-1",
+      "color": "#3b82f6"
+    },
+    {
+      "name": "Altm\u00fchltal",
+      "distance_km": 103.1,
+      "distance_formatted": "103.1 km",
+      "elevation_min_m": 400,
+      "elevation_max_m": 487,
+      "elevation_formatted": "400m \u2013 487m",
+      "duration_formatted": "8h 3m",
+      "id": "tag-2",
+      "color": "#ef4444"
+    },
+    {
+      "name": "Altm\u00fchltal",
+      "distance_km": 29.3,
+      "distance_formatted": "29.3 km",
+      "elevation_min_m": 406,
+      "elevation_max_m": 456,
+      "elevation_formatted": "406m \u2013 456m",
+      "duration_formatted": "2h 17m",
+      "id": "tag-3",
+      "color": "#22c55e"
+    }
+  ]
+}

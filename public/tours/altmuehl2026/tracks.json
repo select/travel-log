@@ -1,0 +1,22 @@
+{
+  "tracks": [
+    {
+      "id": "tag-1",
+      "name": "Altmühltal – Tag 1",
+      "file": "altmuehltal-tag-1.gpx",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "tag-2",
+      "name": "Altmühltal – Tag 2",
+      "file": "altmuehltal-tag-2.gpx",
+      "color": "#ef4444"
+    },
+    {
+      "id": "tag-3",
+      "name": "Altmühltal – Tag 3",
+      "file": "altmuehltal-tag-3.gpx",
+      "color": "#22c55e"
+    }
+  ]
+}

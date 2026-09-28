@@ -18,6 +18,9 @@ logs
 .fleet
 .idea
 
+# Local source media (converted assets live in public/tours/altmuehl2026/)
+/altmuehl/
+
 # Local env files
 .env
 .env.*

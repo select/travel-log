@@ -4,6 +4,7 @@
     <PhotoOverlay
       v-if="selectedPhotoIndex !== null"
       :photos="photosData"
+      :tour-id="tourId"
       :initial-index="selectedPhotoIndex"
       @close="selectedPhotoIndex = null"
     />
@@ -50,7 +51,7 @@ interface TrackStats {
 }
 
 const props = defineProps<{
-  gpxUrl?: string
+  tourId: string
 }>()
 
 const photos = ref<PhotoPoint[]>([])
@@ -64,18 +65,20 @@ const photoMarkers = ref<any[]>([])
 const mapRef = ref<any>(null)
 
 const config = useRuntimeConfig()
-const baseUrl = config.app.baseURL || ''
+const baseUrl = config.app.baseURL || '/'
+const tourUrl = `${baseUrl}tours/${props.tourId}/`
 
 const emit = defineEmits<{
   stats: [data: { distance?: string; elevation?: string; duration?: string }]
 }>()
 
 const mapContainer = ref<HTMLElement | null>(null)
+let disposed = false
 
 onMounted(async () => {
   await nextTick()
-  
   const L = (await import('leaflet')).default
+  if (disposed) return
   const map = L.map(mapContainer.value!, { 
     center: [52.44, 13.43], 
     zoom: 13,
@@ -85,39 +88,39 @@ onMounted(async () => {
     doubleClickZoom: true
   })
   
+  mapRef.value = map
   L.control.zoom({ position: 'bottomleft' }).addTo(map)
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map)
 
-  const config = useRuntimeConfig()
-  const baseUrl = config.app.baseURL || ''
-  
   const allLatLngs: [number, number][][] = []
   const allElevations: number[][] = []
   
-  // Load track list from tracks.json
+  // Load only the selected tour's tracks
   interface TrackInfo { id: string; name: string; file: string; color: string }
-  const tracks: TrackInfo[] = [{ id: 'part-1', name: 'From Britz to Vienna', file: '2026-part-1.gpx', color: '#3b82f6' }]
+  let tracks: TrackInfo[] = []
   try {
-    const tracksRes = await fetch(`${baseUrl}tracks.json`)
-    const tracksData = await tracksRes.json()
-    if (tracksData.tracks) {
-      tracks.length = 0
-      tracksData.tracks.forEach((t: TrackInfo) => tracks.push(t))
-    }
+    const tracksRes = await fetch(`${tourUrl}tracks.json`)
+    if (!tracksRes.ok) throw new Error(`HTTP ${tracksRes.status}`)
+    tracks = (await tracksRes.json()).tracks || []
+    if (disposed) return
   } catch (e) {
-    console.error('Failed to load tracks.json, using defaults')
+    console.error('Failed to load tracks.json:', e)
   }
   
+  if (disposed) return
   trackStats.value = []
   
   for (const track of tracks) {
+    if (disposed) return
     try {
-      const response = await fetch(`${baseUrl}${track.file}`)
+      const response = await fetch(`${tourUrl}${track.file}`)
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${track.file}`)
       const gpxText = await response.text()
-      
+      if (disposed) return
+
       const parser = new DOMParser()
       const gpxDoc = parser.parseFromString(gpxText, 'application/xml')
       const trkpts = gpxDoc.querySelectorAll('trkpt')
@@ -250,6 +253,7 @@ onMounted(async () => {
     }
   }
   
+  if (disposed) return
   // Calculate total stats (simplified)
   if (allLatLngs.length > 0) {
     let totalDist = 0
@@ -280,8 +284,10 @@ onMounted(async () => {
   
   // Load photos and add as Leaflet markers
   try {
-    const photosRes = await fetch(`${baseUrl}images.json`)
-    const fetchedPhotos = await photosRes.json()
+    const photosRes = await fetch(`${tourUrl}images.json`)
+    if (!photosRes.ok) throw new Error(`HTTP ${photosRes.status}`)
+    const fetchedPhotos: PhotoPoint[] = (await photosRes.json()).filter((photo: PhotoPoint) => photo.lat && photo.lon)
+    if (disposed) return
     photosData.value = fetchedPhotos
     
     if (showThumbs.value) {
@@ -310,7 +316,7 @@ onMounted(async () => {
               box-shadow: 0 2px 6px rgba(0,0,0,0.3);
               flex-shrink: 0;
             ">
-              <img src="${baseUrl}thumbnails/${photo.file}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+              <img src="${tourUrl}thumbnails/${photo.file}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
             </div>
           </div>
         `
@@ -332,10 +338,15 @@ onMounted(async () => {
       })
     }
   } catch (e) {
-    console.error('Photos load error:', e)
+    if (!disposed) console.error('Photos load error:', e)
   }
   
-  mapRef.value = map
+})
+
+onUnmounted(() => {
+  disposed = true
+  mapRef.value?.remove()
+  mapRef.value = null
 })
 
 // Watch for thumbnail toggle changes

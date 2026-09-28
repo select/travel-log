@@ -56,11 +56,12 @@ interface Photo {
   file: string
   lat: string
   lon: string
-  date: string
+  date?: string
 }
 
 const props = defineProps<{
   photos: Photo[]
+  tourId: string
   initialIndex?: number
 }>()
 
@@ -97,7 +98,7 @@ const currentPhoto = computed(() => props.photos[currentIndex.value])
 function updateUrl() {
   if (currentPhoto.value) {
     const base = useRuntimeConfig().app.baseURL || '/'
-    imageUrl.value = `${base}images/${currentPhoto.value.file}?v=${Date.now()}-${currentIndex.value}`
+    imageUrl.value = `${base}tours/${props.tourId}/images/${currentPhoto.value.file}?v=${Date.now()}-${currentIndex.value}`
   }
 }
 

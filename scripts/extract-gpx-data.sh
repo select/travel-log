@@ -19,7 +19,7 @@ usage() {
     echo "Options:"
     echo "  <gpx_file>       Parse single GPX file"
     echo "  --from-index      Parse all GPX files listed in tracks.json"
-    echo "  [tracks.json]     Path to tracks.json (default: public/tracks.json)"
+    echo "  [tracks.json]     Path to tracks.json (default: public/tours/altmuehl2026/tracks.json)"
     exit 1
 }
 
@@ -123,7 +123,7 @@ EOF
 }
 
 parse_from_index() {
-    local tracks_json="${1:-public/tracks.json}"
+    local tracks_json="${1:-public/tours/altmuehl2026/tracks.json}"
     
     if [[ ! -f "$tracks_json" ]]; then
         echo -e "${RED}Error: tracks.json not found: $tracks_json${NC}"
@@ -234,7 +234,7 @@ EOF
 check_python
 
 if [[ "$1" == "--from-index" ]]; then
-    parse_from_index "${2:-public/tracks.json}"
+    parse_from_index "${2:-public/tours/altmuehl2026/tracks.json}"
 elif [[ -n "$1" ]]; then
     if [[ ! -f "$1" ]]; then
         echo -e "${RED}Error: File not found: $1${NC}"
