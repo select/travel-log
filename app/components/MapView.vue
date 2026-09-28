@@ -38,6 +38,7 @@ interface PhotoPoint {
   file: string
   lat: string
   lon: string
+  date?: string
   x?: number
   y?: number
 }
@@ -339,7 +340,11 @@ onMounted(async () => {
   try {
     const photosRes = await fetch(`${tourUrl}images.json`)
     if (!photosRes.ok) throw new Error(`HTTP ${photosRes.status}`)
-    const fetchedPhotos: PhotoPoint[] = (await photosRes.json()).filter((photo: PhotoPoint) => photo.lat && photo.lon)
+    const fetchedPhotos: PhotoPoint[] = (await photosRes.json())
+      .filter((photo: PhotoPoint) => photo.lat && photo.lon)
+      .sort((a: PhotoPoint, b: PhotoPoint) =>
+        (a.date || '9999').localeCompare(b.date || '9999') || a.file.localeCompare(b.file)
+      )
     if (disposed) return
     photosData.value = fetchedPhotos
     
