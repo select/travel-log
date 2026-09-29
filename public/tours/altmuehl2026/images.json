@@ -570,14 +570,6 @@
     "location_source": "gpx-estimate"
   },
   {
-    "file": "IMG_20260927_172655.webp",
-    "lat": "49 deg 1' 45.760800\" N",
-    "lon": "11 deg 33' 58.334400\" E",
-    "date": "2026:09:27 17:26:55",
-    "location_source": "gpx-distant-estimate",
-    "location_time_gap_minutes": 258.0
-  },
-  {
     "file": "PANO_20260926_162317.webp",
     "lat": "48 deg 52' 3.079652\" N",
     "lon": "11 deg 5' 47.966517\" E",
