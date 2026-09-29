@@ -36,4 +36,4 @@ pnpm dev
 pnpm build
 ```
 
-The metadata scripts default to the `altmuehl2026` tour when no output/index argument is supplied. `generate-images-json.sh` requires exiftool or Python Pillow; image conversion requires ImageMagick or cwebp. The GPX locator preserves camera GPS, interpolates between nearby timed GPX points, and snaps to the nearest track point where interpolation is not possible (within 10 minutes); estimated entries are marked `location_source: "gpx-estimate"`.
+The metadata scripts default to the `altmuehl2026` tour when no output/index argument is supplied. `generate-images-json.sh` requires exiftool or Python Pillow; image conversion requires ImageMagick or cwebp. The GPX locator preserves camera GPS, interpolates between nearby timed GPX points, and snaps to the nearest track point where interpolation is not possible (within 10 minutes); estimated entries are marked `location_source: "gpx-estimate"`. Use `--max-gap-minutes N` to allow more distant matches; these are marked `gpx-distant-estimate` with their time gap so approximate endpoint placements are distinguishable from close matches.

@@ -27,7 +27,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('tour_dir', type=Path)
     parser.add_argument('--timezone', default='Europe/Berlin', help='Timezone of the photo EXIF timestamps')
+    parser.add_argument('--max-gap-minutes', type=float, default=10,
+                        help='Maximum time to the nearest GPX point (default: 10 minutes)')
     args = parser.parse_args()
+    if args.max_gap_minutes < 0:
+        parser.error('--max-gap-minutes must not be negative')
 
     with (args.tour_dir / 'tracks.json').open() as file:
         tracks = json.load(file)['tracks']
@@ -65,7 +69,7 @@ def main() -> None:
         neighbors = [i for i in (index - 1, index) if 0 <= i < len(points)]
         nearest = min(neighbors, key=lambda i: abs((times[i] - taken).total_seconds()))
         gap = abs((times[nearest] - taken).total_seconds())
-        if gap > 600:  # A distant track day is not a meaningful location estimate.
+        if gap > args.max_gap_minutes * 60:
             unresolved.append(photo['file'])
             continue
 
@@ -82,7 +86,11 @@ def main() -> None:
 
         photo['lat'] = gps_string(lat, True)
         photo['lon'] = gps_string(lon, False)
-        photo['location_source'] = 'gpx-estimate'
+        if gap > 600:
+            photo['location_source'] = 'gpx-distant-estimate'
+            photo['location_time_gap_minutes'] = round(gap / 60, 1)
+        else:
+            photo['location_source'] = 'gpx-estimate'
         located += 1
         print(f"{photo['file']}: {method} (nearest point {gap:.0f}s away)")
 
